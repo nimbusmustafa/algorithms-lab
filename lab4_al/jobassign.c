@@ -17,7 +17,11 @@ void assign(int arr[][10], int index[], int low, int high, int *res, int *cost)
         {
             x += arr[i][index[i]];
         }
+<<<<<<< HEAD
         if (x < *cost) 
+=======
+        if (x > *cost) 
+>>>>>>> 6794a3fba26cd135e7973a4ff9d0b5de8d8824fe
         {
             *cost = x;
             for (int i = 0; i <= high; i++) 
@@ -63,7 +67,11 @@ void main()
         printf("\n");
     }    
 
+<<<<<<< HEAD
     int cost = 1000000;
+=======
+    int cost = 0;
+>>>>>>> 6794a3fba26cd135e7973a4ff9d0b5de8d8824fe
     int *res = malloc(n * sizeof(int));
     assign(arr, index, 0, n - 1, res, &cost);
 

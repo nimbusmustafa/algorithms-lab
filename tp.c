@@ -56,17 +56,13 @@ void DFS(struct Graph *graph, int startVertex)
     struct Stack *stack = createStack(graph->vertices);
 
     push(stack, startVertex);
-
+graph->visited[startVertex] == 1;
     while (!isStackEmpty(stack))
     {
         int currentVertex = pop(stack);
-        if (graph->visited[currentVertex] == 1)
-            continue;
-        else
-        {
-            graph->visited[currentVertex] = 1;
+       
             printf("Visited %d \n", currentVertex);
-        }
+        
 
         struct Node *temp = graph->head[currentVertex].next;
         while (temp != NULL)
@@ -76,7 +72,7 @@ void DFS(struct Graph *graph, int startVertex)
             if (graph->visited[connectedVertex] == 0)
             {
                 push(stack, connectedVertex);
-                // graph->visited[connectedVertex] = 1;
+                graph->visited[connectedVertex] = 1;
             }
             temp = temp->next;
         }

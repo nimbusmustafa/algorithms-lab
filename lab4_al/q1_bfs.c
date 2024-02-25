@@ -16,7 +16,6 @@ struct Graph {
     int *visited;
 };
 
-// Queue structure for BFS
 struct Queue {
     int front, rear, capacity;
     int* array;

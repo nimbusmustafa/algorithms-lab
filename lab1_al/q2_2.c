@@ -1,26 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 6
-int n;
-
-struct Node {
+typedef struct Node {
     int dest;
     struct Node *next;
-};
+} Node;
 
-struct Edge {
+typedef struct Edge {
     int src, dest;
-};
+} Edge;
 
 struct Graph {
-    struct Node *head[N];
+    Node **head;
 };
 
-struct Graph *createGraph(struct Edge edges[], int n) {
+struct Graph *createGraph(Edge edges[], int n, int N, int * isundirected) {
     struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
 
-    for (int i = 0; i < N; i++) {
+    graph->head = (Node **)malloc(100 * sizeof(Node *));
+
+    for (int i = 0; i < 100; i++) {
         graph->head[i] = NULL;
     }
 
@@ -28,34 +27,45 @@ struct Graph *createGraph(struct Edge edges[], int n) {
         int src = edges[i].src;
         int dest = edges[i].dest;
 
-        struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+        Node *newNode = (Node *)malloc(sizeof(Node));
         newNode->dest = dest;
-
         newNode->next = graph->head[src];
 
         graph->head[src] = newNode;
-    }
+
+        if(*isundirected){
+        Node *newNode1 = (Node *)malloc(sizeof(Node));
+        newNode1->dest = src;
+        newNode1->next = graph->head[dest];
+        graph->head[dest] = newNode1;
+    }}
 
     return graph;
 }
+void printGraph(struct Graph *graph, int N) {
+    for (int i = 0; i < 10; i++) {
 
-void printGraph(struct Graph *graph) {
-    for (int i = 0; i < N; i++) {
-        struct Node *ptr = graph->head[i];
-        while (ptr != NULL) {
-            printf("(%d -> %d)\t", i, ptr->dest);
-            ptr = ptr->next;
+   
+        struct Node *ptr1 = graph->head[i];
+        while (ptr1 != NULL) {
+            printf("(%d -> %d)\t", i, ptr1->dest); //source->desr is my source
+            ptr1 = ptr1->next;
         }
-
         printf("\n");
     }
 }
-
 int main() {
+    int N, n, undirected;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &N);
+
     printf("Enter the number of edges: ");
     scanf("%d", &n);
+    printf("is the graph undirected(1 for Yes, 0 for No)");
+    scanf("%d", &undirected);
+    Edge edges[n];
 
-    struct Edge edges[n];
     for (int i = 0; i < n; i++) {
         printf("Enter source for edge %d: ", i + 1);
         scanf("%d", &edges[i].src);
@@ -63,10 +73,11 @@ int main() {
         scanf("%d", &edges[i].dest);
     }
 
-    struct Graph *graph = createGraph(edges, n);
+    struct Graph *graph = createGraph(edges, n, N, &undirected);
+    printGraph(graph,N);
 
-    printf("\nAdjacency List Representation:\n");
-    printGraph(graph);
+
+
 
     return 0;
 }

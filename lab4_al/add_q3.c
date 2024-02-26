@@ -78,11 +78,11 @@ int main() {
     for (int i = 0; i < numCities; ++i) {
         tour[i] = i;
     }
-
-    generatePermutations(tour, 0, numCities, distances, &minDistance, bestTour);
+    //int startcity=0;
+    generatePermutations(tour, 0, numCities, distances, &minDistance, bestTour );
 
     printf("Best Tour: ");
-    for (int i = 0; i <=numCities; ++i) {
+    for (int i = 0; i <numCities; ++i) {
         printf("%d ", bestTour[i]);
     }
     printf("\nMinimum Distance: %d\n", minDistance);

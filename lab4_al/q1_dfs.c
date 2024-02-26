@@ -14,7 +14,7 @@ struct Edge
 
 struct Graph
 {
-    struct Node *head;
+    struct Node **head;
     int vertices;
     int *visited;
 };
@@ -68,7 +68,7 @@ void DFS(struct Graph *graph, int startVertex)
             printf("Visited %d \n", currentVertex);
         }
 
-        struct Node *temp = graph->head[currentVertex].next;
+        struct Node *temp = graph->head[currentVertex];
         while (temp != NULL)
         {
             int connectedVertex = temp->dest;
@@ -90,12 +90,12 @@ struct Graph *createGraph(struct Edge edges[], int n, int vertices, int isDirect
 {
     struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
     graph->vertices = vertices;
-    graph->head = (struct Node *)malloc(vertices * sizeof(struct Node));
+    graph->head = (struct Node **)malloc(vertices * sizeof(struct Node*));
     graph->visited = (int *)malloc(vertices * sizeof(int));
 
     for (int i = 0; i < vertices; i++)
     {
-        graph->head[i].next = NULL;
+        graph->head[i] = NULL;
         graph->visited[i] = 0;
     }
 
@@ -107,16 +107,16 @@ struct Graph *createGraph(struct Edge edges[], int n, int vertices, int isDirect
         struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
         newNode->dest = dest;
 
-        newNode->next = graph->head[src].next;
-        graph->head[src].next = newNode;
+        newNode->next = graph->head[src];
+        graph->head[src] = newNode;
 
                 if (!isDirected) // If undirected, add the reverse edge
         {
             struct Node *reverseNode = (struct Node *)malloc(sizeof(struct Node));
             reverseNode->dest = src;
 
-            reverseNode->next = graph->head[dest].next;
-            graph->head[dest].next = reverseNode;
+            reverseNode->next = graph->head[dest];
+            graph->head[dest] = reverseNode;
         }
     }
     
@@ -128,7 +128,7 @@ void printGraph(struct Graph *graph)
 {
     for (int i = 0; i < graph->vertices; i++)
     {
-        struct Node *ptr = graph->head[i].next;
+        struct Node *ptr = graph->head[i];
         printf("Adjacency list for vertex %d: ", i);
         while (ptr != NULL)
         {

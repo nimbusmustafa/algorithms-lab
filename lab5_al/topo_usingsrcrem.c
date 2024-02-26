@@ -49,11 +49,9 @@ void printGraph(struct Graph *graph, int numVertices) {
 void topologicalSort(struct Graph *graph, int numVertices) {
     int *inDegree = (int *)malloc(numVertices * sizeof(int));
 
-    // Initialize in-degrees to 0
     for (int i = 0; i < numVertices; i++)
         inDegree[i] = 0;
 
-    // Calculate in-degrees for each vertex
     for (int i = 0; i < numVertices; i++) {
         struct Node *ptr = graph[i].head;
         while (ptr != NULL) {

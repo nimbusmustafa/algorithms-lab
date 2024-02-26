@@ -33,7 +33,7 @@ void merge(int arr[], int left, int mid, int right) {
     }
 
     ind = 0;
-    for (i = left; i <= right; i++)
+    for (i = left; i <=right; i++)
         arr[i] = finalArr[ind++];
 
     free(finalArr);
@@ -66,7 +66,7 @@ void main() {
         scanf("%d", &arr[i]);
     }
     printf("Sorted array: ");
-    mergeSort(arr, 0, n);
+    mergeSort(arr, 0, n-1);
     for (int i = 0; i < n; i++)
         printf("%d ", arr[i]);
 }

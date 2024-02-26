@@ -49,11 +49,10 @@ int dequeue(struct Queue* queue) {
 }
 
 void BFS(struct Graph *graph, int startVertex) {
-    // Create a queue for BFS
     int queue[1000];
     int front = -1;
     int rear = -1;
-
+    
     graph->visited[startVertex] = 1;
     queue[++rear] = startVertex;
 

@@ -1,33 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node * Nodeptr;
+typedef struct node ;
 struct node {
     int data;
-    Nodeptr lchild;
-    Nodeptr rchild;
+    struct node *lchild;
+    struct node * rchild;
 };
 
-Nodeptr getnode() {
-    return ((Nodeptr)malloc(sizeof(struct node)));
+struct node * getnode() {
+    return ((struct node *)malloc(sizeof(struct node)));
 }
 
 int max(int a,int b) {
     return a>b?a:b;
 }
 
-int height(Nodeptr root) {
+int height(struct node * root) {
     if(root)
         return max(height(root->lchild),height(root->rchild)) + 1;
 }
 
-int balfac(Nodeptr root) {
+int balfac(struct node * root) {
     return height(root->lchild)-height(root->rchild);
 }
 
-Nodeptr leftrotate(Nodeptr x) {
-    Nodeptr y=x->rchild;
-    Nodeptr z=y->lchild;
+struct node * leftrotate(struct node * x) {
+    struct node * y=x->rchild;
+    struct node * z=y->lchild;
 
     y->lchild=x;
     x->rchild=z;
@@ -35,16 +35,16 @@ Nodeptr leftrotate(Nodeptr x) {
     return y;
 }
 
-Nodeptr rightrotate(Nodeptr x) {
-    Nodeptr y=x->lchild;
-    Nodeptr z=y->rchild;
+struct node * rightrotate(struct node * x) {
+    struct node * y=x->lchild;
+    struct node * z=y->rchild;
 
     y->rchild=x;
     x->lchild=z;
     return y;
 }
 
-Nodeptr Insert_AVL(Nodeptr root,int item) {
+struct node * Insert_AVL(struct node * root,int item) {
     if (!root) {
         root = getnode();
         root->data= item;
@@ -79,7 +79,7 @@ Nodeptr Insert_AVL(Nodeptr root,int item) {
     return root;
 }
 
-Nodeptr create_AVL(Nodeptr root,int data) {
+struct node * create_AVL(struct node * root,int data) {
     int x;
     root=getnode();
     root->data=data;
@@ -94,7 +94,7 @@ Nodeptr create_AVL(Nodeptr root,int data) {
     return root;
 }
 
-void preorder(Nodeptr root) {
+void preorder(struct node * root) {
     if(root) {
         printf("%d ",root->data);
         preorder(root->lchild);
@@ -103,7 +103,7 @@ void preorder(Nodeptr root) {
 }
 
 void main() {
-    Nodeptr root=NULL;
+    struct node * root=NULL;
     int data;
     printf("enter root: ");
     scanf("%d",&data);

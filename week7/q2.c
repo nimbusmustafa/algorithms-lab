@@ -1,134 +1,153 @@
-#include<stdio.h>
-#include<stdlib.h>
-struct Node {
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
     int data;
-    struct Node *left;
-    struct Node *right;
-    int depth;
+    struct node *lchild;
+    struct node * rchild;
 };
-struct Node *newNode(int data) {
-    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
-    if (node == NULL) {
-        printf("Memory allocation error\n");
-        exit(1);
-    }
-    node->data = data;
-    node->left = NULL;
-    node->right = NULL;
-    node->depth = 1;
-    return node;
+
+struct node * getnode() {
+    return ((struct node *)malloc(sizeof(struct node)));
 }
-int depth(struct Node *node) {
-    if (node == NULL)
-        return 0;
-    return node->depth;
+
+int max(int a,int b) {
+    return a>b?a:b;
 }
-int max(int a, int b) {
-    return (a > b) ? a : b;
+
+int height(struct node * root) {
+    if(root)
+        return max(height(root->lchild),height(root->rchild)) + 1;
 }
-struct Node *rightRotate(struct Node *y) {
-    struct Node *x = y->left;
-    struct Node *T2 = x->right;
-    x->right = y;
-    y->left = T2;
-    y->depth = max(depth(y->left), depth(y->right)) + 1;
-    x->depth = max(depth(x->left), depth(x->right)) + 1;
-    return x;
+
+int balfac(struct node * root) {
+    return height(root->lchild)-height(root->rchild);
 }
-struct Node *leftRotate(struct Node *x) {
-    struct Node *y = x->right;
-    struct Node *T2 = y->left;
-    y->left = x;
-    x->right = T2;
-    x->depth = max(depth(x->left), depth(x->right)) + 1;
-    y->depth = max(depth(y->left), depth(y->right)) + 1;
+
+struct node * lchildrotate(struct node * x) {
+    struct node * y=x->rchild;
+    struct node * z=y->lchild;
+
+    y->lchild=x;
+    x->rchild=z;
+
     return y;
 }
-int getBalance(struct Node *N) {
-    if (N == NULL)
-        return 0;
-    return depth(N->left) - depth(N->right);
+
+struct node * rchildrotate(struct node * x) {
+    struct node * y=x->lchild;
+    struct node * z=y->rchild;
+
+    y->rchild=x;
+    x->lchild=z;
+    return y;
 }
-struct Node *insert(struct Node *node, int data) {
-    if (node == NULL)
-        return newNode(data);
-    if (data < node->data)
-        node->left = insert(node->left, data);
-    else if (data > node->data)
-        node->right = insert(node->right, data);
-    else
-        return node;
-    node->depth = 1 + max(depth(node->left), depth(node->right));
-    int balance = getBalance(node);
-    if (balance > 1 && data < node->left->data)
-        return rightRotate(node);
-    if (balance < -1 && data > node->right->data)
-        return leftRotate(node);
-    if (balance > 1 && data > node->left->data) {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
+
+struct node * Insert_AVL(struct node * root,int item) {
+    if (!root) {
+        root = getnode();
+        root->data= item;
+        root->lchild=root->rchild = NULL;
+        return root;
     }
-    if (balance < -1 && data < node->right->data) {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+    if (item<root->data)
+            root->lchild = Insert_AVL(root->lchild, item);
+        else if (item>root->data)
+            root->rchild = Insert_AVL(root->rchild, item);
+        else
+            return root;
+    
+    int bal=balfac(root);
+
+    if (bal > 1 && item < root->lchild->data)
+        return rchildrotate(root);
+ 
+    if (bal < -1 && item > root->rchild->data)
+        return lchildrotate(root);
+
+    if (bal > 1 && item > root->lchild->data) {
+        root->lchild =  lchildrotate(root->lchild);
+        return rchildrotate(root);
     }
-    return node;
+ 
+    if (bal < -1 && item < root->rchild->data) {
+        root->rchild = rchildrotate(root->rchild);
+        return lchildrotate(root);
+    }
+ 
+    return root;
 }
-void inorder(struct Node *root) {
+
+struct node * create_AVL(struct node * root,int data) {
+    int x;
+    root=getnode();
+    root->data=data;
+    root->lchild=root->rchild=NULL;
+    while(1) {
+        printf("enter element: ");
+        scanf("%d",&x);
+        if(x==-1)
+            break;
+        root=Insert_AVL(root,x);
+    }
+    return root;
+}
+
+void inorder(struct node *root) {
     if (root != NULL) {
-        inorder(root->left);
+        inorder(root->lchild);
         printf("%d ", root->data);
-        inorder(root->right);
+        inorder(root->rchild);
     }
 }
-struct Node * minValueNode(struct Node* node) {
-    struct Node* current = node;
-    while(current && current->left != NULL){
-        current = current->left;
+struct node * minValuenode(struct node* node) {
+    struct node* current = node;
+    while(current && current->lchild != NULL){
+        current = current->lchild;
     }
     return current;
 }
-int findSuccessor(struct Node* root, int data) {
-    struct Node* current = root;
-    struct Node* successor = NULL;
+int findSuccessor(struct node* root, int data) {
+    struct node* current = root;
+    struct node* successor = NULL;
     while (current != NULL) {
         if (current->data > data) {
             successor = current;
-            current = current->left;
+            current = current->lchild;
         }
         else if (current->data < data) {
-            current = current->right;
+            current = current->rchild;
         }
         else {
-            if (current->right != NULL) {
-                successor = minValueNode(current->right);
+            if (current->rchild != NULL) {
+                successor = minValuenode(current->rchild);
             }
             break;
         }
     }
     return successor->data;
 }
-struct Node *maxValueNode(struct Node* node) {
-    struct Node* current = node;
-    while (current && current->right != NULL){
-        current = current->right;
+struct node *maxValuenode(struct node* node) {
+    struct node* current = node;
+    while (current && current->rchild != NULL){
+        current = current->rchild;
     }
     return current;
 }
-int findPredecessor(struct Node* root, int data) {
-    struct Node* current = root;
-    struct Node* predecessor = NULL;
+int findPredecessor(struct node* root, int data) {
+    struct node* current = root;
+    struct node* predecessor = NULL;
     while (current != NULL) {
         if (current->data > data) {
-            current = current->left;
+            current = current->lchild;
         }
         else if(current->data < data){
             predecessor = current;
-            current = current->right;
+            current = current->rchild;
         }
         else{
-            if (current->left != NULL){
-                predecessor = maxValueNode(current->left);
+            if (current->lchild != NULL){
+                predecessor = maxValuenode(current->lchild);
             }
             break;
         }
@@ -136,9 +155,9 @@ int findPredecessor(struct Node* root, int data) {
     return predecessor->data;
 }
 int main(){
-    struct Node *root = NULL;
+    struct node *root = NULL;
     int a, key, succ, pre;
-    printf("Root Node : \n");
+    printf("Root node : \n");
     do{
         printf("Input Value (Enter -1 to Exit): ");
         scanf(" %d",&a);
@@ -147,7 +166,7 @@ int main(){
         inorder(root);
         }
         else{
-            root = insert(root, a);
+            root = Insert_AVL(root, a);
         }
     }while(a != -1);
     printf("\nInput Value to find Successor and Predecessor : ");

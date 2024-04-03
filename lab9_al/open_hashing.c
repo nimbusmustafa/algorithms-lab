@@ -18,10 +18,7 @@ void insert(Node *hashTable[], int key) {
     int index = key % SIZE;
 
     Node *newNode = (Node *)malloc(sizeof(Node));
-    if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
-        exit(1);
-    }
+
     newNode->key = key;
     newNode->next = NULL;
 

@@ -10,8 +10,8 @@ void warshall(int **p, int n) {
     for (k = 0; k < n; k++)
         for (i = 0; i < n; i++)
             for (j = 0; j < n; j++)
-               { if (p[i][k] + p[k][j] < p[i][j])
-                    p[i][j] = p[i][k] + p[k][j];}}
+                p[i][j] = p[i][j] || (p[i][k] && p[k][j]);
+}
 
 int main() {
     int n, e, u, v, i, j;

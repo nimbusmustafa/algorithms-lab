@@ -1,49 +1,48 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-struct node {
+typedef struct node{
     int data;
     struct node *lchild;
-    struct node * rchild;
-};
+    struct node* rchild;
+}avl;
 
-struct node * getnode() {
-    return ((struct node *)malloc(sizeof(struct node)));
+avl *getnode(){
+    return((avl*)malloc(sizeof(avl)));
 }
-
-int max(int a,int b) {
+int max(int a, int b){
     return a>b?a:b;
 }
 
-int height(struct node * root) {
-    if(root)
-        return max(height(root->lchild),height(root->rchild)) + 1;
+int height(avl *root){
+        if(root)
+
+    return max(height(root->rchild),height(root->lchild))+1;
 }
 
-int balfac(struct node * root) {
-    return height(root->lchild)-height(root->rchild);
-}
+int balfac(avl *root){
+    return height(root->lchild)-height(root->rchild);}
 
-struct node * leftrotate(struct node * x) {
-    struct node * y=x->rchild;
-    struct node * z=y->lchild;
+avl *leftrotate(avl *root){
+    avl *y=root->rchild;
+    avl *z= y->lchild;
 
-    y->lchild=x;
-    x->rchild=z;
-
+    y->lchild=root;
+    root->rchild=z;
     return y;
 }
 
-struct node * rightrotate(struct node * x) {
-    struct node * y=x->lchild;
-    struct node * z=y->rchild;
 
-    y->rchild=x;
-    x->lchild=z;
+avl *rightrotate(avl *root){
+    avl *y=root->lchild;
+    avl *z= y->rchild;
+
+    y->rchild=root;
+    root->lchild=z;
     return y;
 }
 
-struct node * Insert_AVL(struct node * root,int item) {
+avl *insertAVL(avl *root, int item){
     if (!root) {
         root = getnode();
         root->data= item;
@@ -51,34 +50,34 @@ struct node * Insert_AVL(struct node * root,int item) {
         return root;
     }
     if (item<root->data)
-            root->lchild = Insert_AVL(root->lchild, item);
+            root->lchild = insertAVL(root->lchild, item);
         else if (item>root->data)
-            root->rchild = Insert_AVL(root->rchild, item);
+            root->rchild = insertAVL(root->rchild, item);
         else
             return root;
     
     int bal=balfac(root);
 
-    if (bal > 1 && item < root->lchild->data)
+        if (bal > 1 && item < root->lchild->data)
         return rightrotate(root);
  
     if (bal < -1 && item > root->rchild->data)
         return leftrotate(root);
 
-    if (bal > 1 && item > root->lchild->data) {
+            if (bal > 1 && item > root->lchild->data) {
         root->lchild =  leftrotate(root->lchild);
         return rightrotate(root);
     }
- 
-    if (bal < -1 && item < root->rchild->data) {
+        if (bal < -1 && item < root->rchild->data) {
         root->rchild = rightrotate(root->rchild);
         return leftrotate(root);
     }
- 
+
     return root;
 }
 
-struct node * create_AVL(struct node * root,int data) {
+
+avl * create_AVL(avl* root,int data) {
     int x;
     root=getnode();
     root->data=data;
@@ -88,12 +87,12 @@ struct node * create_AVL(struct node * root,int data) {
         scanf("%d",&x);
         if(x==-1)
             break;
-        root=Insert_AVL(root,x);
+        root=insertAVL(root,x);
     }
     return root;
 }
 
-void preorder(struct node * root) {
+void preorder(avl * root) {
     if(root) {
         printf("%d ",root->data);
         preorder(root->lchild);
@@ -102,7 +101,7 @@ void preorder(struct node * root) {
 }
 
 void main() {
-    struct node * root=NULL;
+    avl* root=NULL;
     int data;
     printf("enter root: ");
     scanf("%d",&data);
@@ -111,6 +110,3 @@ void main() {
     preorder(root);
     printf("\n");
 }
-
-
-

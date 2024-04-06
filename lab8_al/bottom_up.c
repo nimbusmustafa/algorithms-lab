@@ -25,11 +25,6 @@ void build_heap(int arr[], int n) {
     }
 }
 
-void printSpaces(int n) {
-    for (int i = 0; i < n; i++) {
-        printf(" ");
-    }
-}
 
 void printHeap(int arr[], int n, int index, int level) {
     if (index <= n) {

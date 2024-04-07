@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INF 99999 // Define a value to represent infinity
+#define INF 99999 
 
 int max(int a, int b) {
     return (a > b) ? a : b;

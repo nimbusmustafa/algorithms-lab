@@ -40,11 +40,11 @@ int search(Node *hashTable[], int key, int *numComparisons) {
     while (current != NULL) {
         (*numComparisons)++;
         if (current->key == key) {
-            return 1; // Found
+            return 1; 
         }
         current = current->next;
     }
-    return 0; // Not found
+    return 0; 
 }
 
 void displayHashTable(Node *hashTable[]) {

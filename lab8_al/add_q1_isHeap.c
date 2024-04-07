@@ -17,10 +17,6 @@ int main() {
     printf("Enter the number of elements: ");
     scanf("%d", &n);
 
-    if (n <= 0) {
-        printf("Invalid number of elements.\n");
-        return 1;
-    }
 
     int arr[n + 1];  
     printf("Enter %d elements: ", n);

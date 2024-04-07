@@ -1,66 +1,182 @@
-#include<stdio.h>
-#include<stdlib.h>
-struct Graph{
-    struct node **head;
-};
-struct node{
-    int dest;
-    struct node *next;
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *lchild;
+    struct node *rchild;
 };
 
-struct Edge{
-    int src, dest;
-};
-
-struct Graph *createGraph(int V, int E, struct Edge edges[]){
-    struct Graph *graph=(struct Graph*)malloc(sizeof(struct Graph));
-    graph->head = (struct node **)malloc(V*sizeof(struct node *));
-    for(int i=0;i<V;i++){
-      graph->head[i]=NULL;
-    }
-      for (int i = 0; i < E; i++)
-    {
-        int src = edges[i].src;
-        int dest = edges[i].dest;
-        struct node *Newnode=(struct node*)malloc(sizeof(struct node));
-        Newnode->dest=dest;
-        Newnode->next=graph->head[src];
-        graph->head[src]=Newnode;
-  
+int max(int a, int b){
+    return (a>b)?a:b;
 }
 
-return graph;}
+int height(struct node *root){
+    if(root!=NULL)
+    return max(height(root->lchild),height(root->rchild)) +1;
+}
 
-void printGraph(struct Graph *graph, int V)
-{
-    for (int i = 0; i < V; i++)
-    {
-        struct node *ptr = graph->head[i];
-        while (ptr != NULL)
-        {
-            printf("(%d —> %d)\t", i, ptr->dest);
-            ptr = ptr->next;
-        }
+int balfac(struct node *root){
+    if(root!=NULL)
+    return( height(root->lchild)-height(root->rchild));
+}
 
-        printf("\n");
+struct node *getnode(int data){
+     struct node * newnode= (struct node *)malloc(sizeof(struct node));
+     newnode->data=data;
+     newnode->rchild=newnode->rchild=NULL;
+     return newnode;
+}
+
+struct node *leftrotate(struct node *root){
+
+    struct node * y=root->rchild;
+    struct node * z=y->lchild;
+
+    y->lchild=root;
+    root->rchild=z;
+    return y;
+}
+
+struct node *rightrotate(struct node *root){
+
+    struct node * y=root->lchild;
+    struct node * z=y->rchild;
+
+    y->rchild=root;
+    root->lchild=z;
+    return y;
+}
+
+struct node *insertAVL(struct node *root, int data){
+    if(root==NULL){
+        root=getnode(data);
+        return root;
     }
+
+        if (data<root->data)
+            root->lchild = insertAVL(root->lchild, data);
+        else if (data>root->data)
+            root->rchild = insertAVL(root->rchild, data);
+        else
+            return root;
+int bal=balfac(root);
+                if (bal > 1 && data < root->lchild->data)
+        return rightrotate(root);
+ 
+    if (bal < -1 && data > root->rchild->data)
+        return leftrotate(root);
+
+    if (bal > 1 && data > root->lchild->data) {
+        root->lchild =  leftrotate(root->lchild);
+        return rightrotate(root);
+    }
+ 
+    if (bal < -1 && data < root->rchild->data) {
+        root->rchild = rightrotate(root->rchild);
+        return leftrotate(root);
+    }
+    return root;
+}
+
+struct node * create_AVL(struct node * root,int data) {
+    int x;
+    root=getnode(data);
+ 
+    while(1) {
+        printf("enter element: ");
+        scanf("%d",&x);
+        if(x==-1)
+            break;
+        root=insertAVL(root,x);
+    }
+    return root;
+}
+
+void inorder(struct node *root) {
+    if (root != NULL) {
+        inorder(root->lchild);
+        printf("%d ", root->data);
+        inorder(root->rchild);
+    }
+}
+struct node * minValuenode(struct node* root) {
+    struct node* current = root;
+    while(current && current->lchild != NULL){
+        current = current->lchild;
+    }
+    return current;
+}
+
+struct node * maxValuenode(struct node* root) {
+    struct node* current = root;
+    while(current && current->rchild != NULL){
+        current = current->rchild;
+    }
+    return current;
+}
+
+int findSuccessor(struct node* root, int data) {
+    struct node* current = root;
+    struct node* successor = NULL;
+    while (current != NULL) {
+        if (current->data > data) {
+            successor = current;
+            current = current->lchild;
+        }
+        else if (current->data < data) {
+            current = current->rchild;
+        }
+        else {
+            if (current->rchild != NULL) {
+                successor = minValuenode(current->rchild);
+            }
+            break;
+        }
+    }
+    return successor->data;
+}
+
+int findPredecessor(struct node* root, int data) {
+    struct node* current = root;
+    struct node* predecessor = NULL;
+    while (current != NULL) {
+        if (current->data > data) {
+            current = current->lchild;
+        }
+        else if(current->data < data){
+            predecessor = current;
+            current = current->rchild;
+        }
+        else{
+            if (current->lchild != NULL){
+                predecessor = maxValuenode(current->lchild);
+            }
+            break;
+        }
+    }
+    return predecessor->data;
 }
 int main(){
-    int V; int E;
-    printf("enter no of vertices: \n");
-    scanf("%d", &V);
-        printf("enter no of edges: \n");
-    scanf("%d", &E);
-    struct Edge edges[E];
-
-    for (int i = 0; i < E; i++)
-    {
-        printf("enter source");
-        scanf("%d", &edges[i].src);
-        printf("enter dest");
-        scanf("%d", &edges[i].dest);
-    }
-        struct Graph *graph = createGraph(V,E,edges);
-    printGraph(graph, V);
+    struct node *root = NULL;
+    int a, key, succ, pre;
+    printf("Root node : \n");
+    do{
+        printf("Input Value (Enter -1 to Exit): ");
+        scanf(" %d",&a);
+        if(a == -1){
+        printf("Inorder traversal of AVL tree: ");
+        inorder(root);
+        }
+        else{
+            root = insertAVL(root, a);
+        }
+    }while(a != -1);
+    printf("\nInput Value to find Successor and Predecessor : ");
+    scanf(" %d",&key);
+    succ = findSuccessor(root, key);
+    pre = findPredecessor(root, key);
+    printf("Successor of %d : %d\n",key,succ);
+    printf("Predecessor of %d : %d\n",key,pre);
     return 0;
 }

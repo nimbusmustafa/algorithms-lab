@@ -7,7 +7,7 @@ struct node {
     struct node * rchild;
 };
 
-struct node * getnode() {
+struct node * getnode()  {
     return ((struct node *)malloc(sizeof(struct node)));
 }
 
